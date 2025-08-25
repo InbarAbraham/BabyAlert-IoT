@@ -12,10 +12,11 @@ def send_telegram_alert(message: str):
     try:
         response = requests.post(url, data=payload)
         if response.status_code != 200:
-            print(f"❌ Failed to send Telegram message: {response.text}")
+            print(f"Failed to send Telegram message: {response.text}")
         else:
-            print("✅ Telegram alert sent!")
+            print("Telegram alert sent!")
     except Exception as e:
-        print(f"❌ Error sending Telegram message: {e}")
+        print(f"Error sending Telegram message: {e}")
 
-send_telegram_alert("🚨 ALERT: A kid was detected inside the locked car!")
+
+send_telegram_alert("ALERT: A kid was detected inside the locked car!")
