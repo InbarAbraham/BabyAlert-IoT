@@ -22,7 +22,7 @@ record = False
 
 # === Load model ===
 if not os.path.exists(model_path):
-    print("❌ ERROR: YOLO model not found.")
+    print("ERROR: YOLO model not found.")
     sys.exit()
 
 model = YOLO(model_path, task='detect')
@@ -44,7 +44,7 @@ elif img_source.startswith("usb"):
     source_type = 'usb'
     usb_idx = int(img_source[3:])
 else:
-    print("❌ Invalid source.")
+    print("Invalid source.")
     sys.exit()
 
 # === Resolution ===
@@ -54,7 +54,7 @@ if user_res:
         resW, resH = map(int, user_res.lower().split('x'))
         resize = True
     except:
-        print("❌ Invalid resolution format. Use 'WIDTHxHEIGHT'.")
+        print("Invalid resolution format. Use 'WIDTHxHEIGHT'.")
         sys.exit()
 
 # === Video/Camera Setup ===
@@ -64,15 +64,15 @@ if source_type in ['video', 'usb']:
         cap.set(3, resW)
         cap.set(4, resH)
     if not cap.isOpened():
-        print("❌ Failed to open video/camera source.")
+        print("Failed to open video/camera source.")
         sys.exit()
 
 if record:
     if source_type not in ['video', 'usb']:
-        print("❌ Recording only supported for video/camera.")
+        print("Recording only supported for video/camera.")
         sys.exit()
     if not resize:
-        print("❌ Please set resolution to enable recording.")
+        print("Please set resolution to enable recording.")
         sys.exit()
     recorder = cv2.VideoWriter('demo1.avi', cv2.VideoWriter_fourcc(*'MJPG'), 30, (resW, resH))
 
@@ -95,17 +95,17 @@ while True:
 
     if source_type in ['image', 'folder']:
         if img_count >= len(imgs_list):
-            print("✅ Done with all images.")
+            print("Done with all images.")
             break
         frame = cv2.imread(imgs_list[img_count])
         img_count += 1
     elif source_type in ['video', 'usb']:
         ret, frame = cap.read()
         if not ret:
-            print("✅ Done with video/camera.")
+            print("Done with video/camera.")
             break
     else:
-        print("❌ Unsupported source type.")
+        print("Unsupported source type.")
         break
 
     if resize:
@@ -159,7 +159,7 @@ while True:
         cv2.waitKey()
 
 # === Cleanup ===
-print(f"📊 Avg FPS: {np.mean(fps_log):.2f}")
+print(f" Avg FPS: {np.mean(fps_log):.2f}")
 if source_type in ['video', 'usb']:
     cap.release()
 if record:
@@ -179,15 +179,16 @@ def send_telegram_alert(message: str):
     try:
         response = requests.post(url, data=payload)
         if response.status_code != 200:
-            print(f"❌ Failed to send Telegram message: {response.text}")
+            print(f"Failed to send Telegram message: {response.text}")
         else:
-            print("✅ Telegram alert sent!")
+            print("Telegram alert sent!")
     except Exception as e:
-        print(f"❌ Error sending Telegram message: {e}")
+        print(f"Error sending Telegram message: {e}")
 
 unique_detected = set(detected)
 print(unique_detected)
 
 if 'Kid' in unique_detected:
-    send_telegram_alert("🚨 ALERT: A kid was detected inside the locked car!")
+    send_telegram_alert("ALERT: A kid was detected inside the locked car!")
+
     
